@@ -185,6 +185,7 @@ def main(argv):
     parser.add_argument("--acme-dir", required=True, help="path to the .well-known/acme-challenge/ directory")
     parser.add_argument("--quiet", action="store_const", const=logging.ERROR, help="suppress output except for errors")
     parser.add_argument("--ca", default=DEFAULT_CA, help="certificate authority, default is Let's Encrypt")
+    parser.add_argument("--intermediate", default=None, help="intermediate certificate to concatenate")
     parser.add_argument("--output", default="", help="output to this file if successful, default is standard output")
 
     args = parser.parse_args(argv)
@@ -192,6 +193,8 @@ def main(argv):
     signed_crt = get_crt(args.account_key, args.csr, args.acme_dir, log=LOGGER, CA=args.ca)
     if args.output:
         with open(args.output, 'w') as outputfile:
+            if args.intermediate:
+                outputfile.write(open(args.intermediate).read())
             outputfile.write(signed_crt)
     else:
         sys.stdout.write(signed_crt)
