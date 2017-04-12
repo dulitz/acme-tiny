@@ -193,9 +193,9 @@ def main(argv):
     signed_crt = get_crt(args.account_key, args.csr, args.acme_dir, log=LOGGER, CA=args.ca)
     if args.output:
         with open(args.output, 'w') as outputfile:
+            outputfile.write(signed_crt)
             if args.intermediate:
                 outputfile.write(open(args.intermediate).read())
-            outputfile.write(signed_crt)
     else:
         sys.stdout.write(signed_crt)
 
